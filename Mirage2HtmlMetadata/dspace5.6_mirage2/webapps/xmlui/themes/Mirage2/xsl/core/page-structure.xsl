@@ -867,6 +867,10 @@
                   ga('send', 'pageview');
            </xsl:text></script>
         </xsl:if>
+
+        <!-- Custom Flinders script to add CIA (Chief Investigator A) info -->
+        <script src="{concat($theme-path, 'vendor/zz-flinders/addcia.js')}">&#160;</script>
+
     </xsl:template>
 
     <!--The Language Selection-->
