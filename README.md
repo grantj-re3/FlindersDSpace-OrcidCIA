@@ -10,7 +10,8 @@ A (CIA) in DSpace.
 ## Background
 
 The Australian NHMRC have specified the following in the document *National
-Health and Medical Research Council, Open Access Policy, 15 January 2018*:
+Health and Medical Research Council, Open Access Policy, 15 January 2018,
+Appendix 1, item 10*:
 
 > "The [institutional repository] publication metadata must also include
 > the ORCID identifier of the author submitting the metadata."
@@ -41,7 +42,7 @@ References:
 
 ## Solution 1 - Use javascript plus DSpace metadata
 
-See folder *Mirage2HtmlMetadata*
+See folder *html_metadata*.
 
 Environment:
 - DSpace 5
@@ -55,7 +56,7 @@ The solution:
   Item Record page (eg. "DC.contributor").
 - Add a javascript program which does the following on the Simple
   Item Record page:
-  * extracts the content of META-tag (ie. researcher name and ORCID)
+  * extracts the content of the META-tag (ie. researcher name and ORCID)
   * adds the content to a DIV element
   * adds the DIV element to the page
 
