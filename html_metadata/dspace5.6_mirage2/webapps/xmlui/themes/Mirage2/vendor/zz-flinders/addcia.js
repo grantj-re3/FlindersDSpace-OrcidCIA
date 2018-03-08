@@ -27,7 +27,7 @@ window.onload = function () {
     if (!metadata) { continue; }	// Not found
     var a = metadata.split(delim);
     if(a.length == 3 && !a[0] && a[1] && a[2]) { // Formatting is ok
-      var cia_json = JSON.stringify( {name: a[1], orcid: a[2]} ); // Escape special JSON chars
+      var cia_json = JSON.stringify( {"name": a[1], "orcid": a[2]} ); // Escape special JSON chars
       zzDoCustAddCiaNode(cia_json);
       return;	// Stop after processing the first one which matches our format
     }

@@ -45,7 +45,7 @@ References:
 See folder *html_metadata*.
 
 Environment:
-- DSpace 5
+- DSpace 5.6
 - XMLUI Mirage 2
 
 The solution:
