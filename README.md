@@ -32,6 +32,8 @@ Desirable features:
 1. Easy to setup.
 2. Easy to maintain.
 3. Easy to decommission later (eg. when DSpace supports ORCID API v2).
+4. Doesn't pollute or degrade metadata collected by harvesters and web
+   crawlers.
 
 References:
 - https://www.nhmrc.gov.au/grants-funding/policy/nhmrc-open-access-policy
@@ -71,6 +73,9 @@ Evaluation of the solution:
    info and nothing else, then perhaps it would be fairly
    straightforward to remove the fields from all affected records
    via the DSpace Batch Metadata Editing tool.
+4. Metadata is affected, so it is up to each institution to
+   decide if they are happy with the content of the additional
+   field with respect to harvesters and web crawlers.
 
 
 ## Solution 2 - Use javascript plus a custom database
@@ -104,6 +109,8 @@ Evaluation of the solution:
      "handles" table for handle; where there are potentially
      many handles records for one details record).
 3. Easy to decommission later (ie. just disable the javascript).
+4. Metadata remains unchanged, hence no impact on harvesters
+   and web crawlers.
 
 
 ## Solution 3 - Modify the DSpace Java source code & add custom database table
