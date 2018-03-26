@@ -20,18 +20,19 @@ window.onload = function () {
   var elems = document.querySelectorAll("meta[name='" + field + "']");
   if (elems.length == 0) { return; }	// None found
 
-  // Field format: "CIA: Surname, Givenname ORCID:0000-0000-0000-0000"
-  var delim = /^ *cia: *| *orcid: */i;
+  // Field format: "Surname, Givenname : 0000-0000-0000-000X"
+  var re = /^ *([^:]+?) *: *(\d{4}-\d{4}-\d{4}-\d{3}[\dX]) *$/
+  var cias = [];			// Array of (JSON) strings
+
   for (var i=0; i<elems.length; i++) {
     var metadata = elems[i].getAttribute("content");
     if (!metadata) { continue; }	// Not found
-    var a = metadata.split(delim);
-    if(a.length == 3 && !a[0] && a[1] && a[2]) { // Formatting is ok
-      var cia_json = JSON.stringify( {"name": a[1], "orcid": a[2]} ); // Escape special JSON chars
-      zzDoCustAddCiaNode(cia_json);
-      return;	// Stop after processing the first one which matches our format
+    var a = metadata.match(re)
+    if(a && a.length == 3) { // Formatting is ok
+      cias.push( JSON.stringify( {"name": a[1], "orcid": a[2]} ) ); // Escape special JSON chars
     }
   }
+  if (cias.length > 0) { zzDoCustAddCiaNode(cias); }
 };
 
 /*
@@ -43,36 +44,51 @@ function zzDoCustIsTargetPage() {
 }
 
 /*
- * Based on the JSON string argument, create a DIV containing
- * CIA info and add it to the DOM. JSON format example:
- *   '{ "name":"Surname, Givenname", "orcid":"0000-0000-0000-0000" }'
+ * Based on the array of CIA-strings, create a DIV containing
+ * CIA info and add it to the DOM. Each array element has the
+ * following JSON format:
+ *   '{ "name":"Surname, Givenname", "orcid":"0000-0000-0000-000X" }'
+ * We assume the array is not empty & JSON-string & content is valid.
  */
-function zzDoCustAddCiaNode(cia_json) {
-  // Create a wrapper (div) with 3 children: heading (h5), name (div) &
-  // orcid (div); then insert the wrapper into the DOM.
+function zzDoCustAddCiaNode(cias) {
+  // Create a wrapper (div) with the following children:
+  // - heading (h5)
+  // - name (div) & orcid (div) for each CIA
+  // then insert the wrapper into the DOM.
   var elem = document.getElementsByClassName("simple-item-view-show-full")[0];
   if(!elem) { return; }	// This is not a simple-item-view page!
 
-  var obj = JSON.parse(cia_json);
   var wrap = document.createElement("div");
   // Use same styles as simple-item-view-authors
   wrap.setAttribute("class", "simple-item-view-authors item-page-field-wrapper table");
 
   var child = document.createElement("h5");
-  var t = document.createTextNode("Chief Investigator A");
+  var t = document.createTextNode("Chief Investigator");
   child.appendChild(t);
   wrap.appendChild(child);
 
-  child = document.createElement("div");
-  t = document.createTextNode(obj.name);
-  child.appendChild(t);
-  wrap.appendChild(child);
+  for(var i in cias) {
+    var obj = JSON.parse(cias[i]);
 
-  child = document.createElement("div");
-  t = document.createTextNode("ORCiD:" + obj.orcid);
-  child.appendChild(t);
-  wrap.appendChild(child);
+    // Name-DIV
+    child = document.createElement("div");
+    t = document.createTextNode(obj.name);
+    child.appendChild(t);
+    wrap.appendChild(child);
 
+    // ORCID-DIV contains text & hyperlink
+    child = document.createElement("div");
+    t = document.createTextNode("ORCiD:");
+    child.appendChild(t);
+
+    var link = document.createElement("a");
+    link.href = "https://orcid.org/" + obj.orcid;
+    link.target = "_blank";
+    t = document.createTextNode(obj.orcid);
+    link.appendChild(t);
+    child.appendChild(link);
+    wrap.appendChild(child);
+  }
   elem.parentNode.insertBefore(wrap, elem);
 }
 
