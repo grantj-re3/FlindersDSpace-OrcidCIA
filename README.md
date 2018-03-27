@@ -40,6 +40,7 @@ References:
 - https://www.nhmrc.gov.au/_files_nhmrc/file/research/nhmrc_open_access_policy_15_january_2018_v2.pdf
 - https://groups.google.com/forum/#!topic/dspace-tech/HO_4e-WYjjo
 - https://jira.duraspace.org/browse/DS-3447
+- https://support.orcid.org/knowledgebase/articles/116780-structure-of-the-orcid-identifier
 
 
 ## Solution 1 - Use javascript plus DSpace metadata
