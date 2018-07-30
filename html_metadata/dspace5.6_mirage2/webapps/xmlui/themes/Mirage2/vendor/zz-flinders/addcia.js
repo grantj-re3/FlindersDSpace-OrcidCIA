@@ -70,6 +70,10 @@ function zzDoCustAddCiaNode(cias) {
   for(var i in cias) {
     var obj = JSON.parse(cias[i]);
 
+    // FIXME: Comment out 2 lines below to remove gap before each Chief Investigator
+    child = document.createElement("p");
+    wrap.appendChild(child);
+
     // Name-DIV
     child = document.createElement("div");
     t = document.createTextNode(obj.name);
