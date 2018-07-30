@@ -118,6 +118,7 @@
                     </div>
                     <xsl:call-template name="itemSummaryView-DIM-date"/>
                     <xsl:call-template name="itemSummaryView-DIM-authors"/>
+                    <xsl:call-template name="itemSummaryView-DIM-cia"/>
                     <xsl:if test="$ds_item_view_toggle_url != ''">
                         <xsl:call-template name="itemSummaryView-show-full"/>
                     </xsl:if>
@@ -261,6 +262,66 @@
             </xsl:if>
             <xsl:copy-of select="node()"/>
         </div>
+    </xsl:template>
+
+    <!-- Customisation: Extract chief investigator and ORCID (from dc.contributor.ciaorcid) -->
+    <xsl:template name="itemSummaryView-DIM-cia">
+        <xsl:if test="dim:field[@element='contributor'][@qualifier='ciaorcid']">
+            <div class="simple-item-view-authors item-page-field-wrapper table">
+                <h5><i18n:text>Chief Investigator</i18n:text></h5>
+                <xsl:if test="dim:field[@element='contributor'][@qualifier='ciaorcid']">
+                    <xsl:for-each select="dim:field[@element='contributor'][@qualifier='ciaorcid']">
+                        <xsl:call-template name="itemSummaryView-DIM-cia-entry" />
+                    </xsl:for-each>
+                </xsl:if>
+            </div>
+        </xsl:if>
+    </xsl:template>
+
+    <!-- Extract and return the ORCID (eg. "1111-2222-3333-444X") from text
+         "Name:1111-2222-3333-444X" (where ":" delimits the person-name from
+         the ORCID). Return the empty string if the ORCID is invalid.  -->
+    <xsl:template name="get_orcid">
+        <xsl:param name="delim" select="':'"/>
+        <xsl:param name="personname_orcid" />
+        <xsl:variable name="orcid" select="normalize-space(substring-after($personname_orcid, $delim))"/>
+
+        <xsl:choose>
+            <xsl:when test="
+                string-length($orcid) = 19 and
+                concat(substring($orcid, 5, 1), substring($orcid, 10, 1), substring($orcid, 15, 1)) = '---' and
+                translate(concat(
+                    substring($orcid,  1, 4), substring($orcid,  6, 4), substring($orcid, 11, 4), substring($orcid, 16, 3)
+                    ), '0123456789', '') = '' and
+                translate(substring($orcid, 19, 1), '0123456789X', '') = ''">
+                <xsl:value-of select="$orcid"/>
+            </xsl:when>
+
+            <xsl:otherwise>
+                <xsl:value-of select="''"/>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+
+    <!-- Process each chief investigator entry -->
+    <xsl:template name="itemSummaryView-DIM-cia-entry">
+        <xsl:param name="delim" select="':'"/>
+        <xsl:variable name="personname" select="normalize-space(substring-before(., $delim))"/>
+        <xsl:variable name="orcid">
+            <xsl:call-template name="get_orcid">
+                <xsl:with-param name="personname_orcid" select="." />
+            </xsl:call-template>
+        </xsl:variable>
+
+        <xsl:if test="$personname != '' and $orcid != ''">
+            <p/>
+            <div>
+                <xsl:copy-of select="$personname"/>
+            </div>
+            <div>
+                ORCiD:<a href="https://orcid.org/{$orcid}" target="_blank"><xsl:copy-of select="$orcid"/></a>
+            </div>
+        </xsl:if>
     </xsl:template>
 
     <xsl:template name="itemSummaryView-DIM-URI">
