@@ -1,4 +1,4 @@
-FlindersDSpace-OrcidCIA
+FlindersDSpace-OrcidCIA  ** SUPERSEDED **
 =======================
 
 ## Summary
@@ -20,10 +20,12 @@ The NHMRC have also confirmed on the CAIRSS list that they:
 
 > "... require the ORCID of the CIA to be displayed"
 
-However, despite the fact that DSpace 5 and 6 include ORCID integration,
-that integration uses ORCID API v1 which is due to be decommissioned
-(originally in "late 2017", but now "Public API from March 1, 2018" and
-"Member API within 2018").
+However, despite the fact that DSpace 5 and 6 include ORCID authority
+control integration, that integration does *not* display the ORCID hence
+cannot comply with the above statements. (There have also been some
+issues regarding the decommissioning of ORCID API v1 and an apparent
+ORCID authority control bug in DSpace 5.9 and 6.3, but that is a
+separate story.)
 
 So, is there a way to integrate the ORCID of the Chief Investigator A
 into DSpace?
@@ -41,6 +43,7 @@ References:
 - https://groups.google.com/forum/#!topic/dspace-tech/HO_4e-WYjjo
 - https://jira.duraspace.org/browse/DS-3447
 - https://support.orcid.org/knowledgebase/articles/116780-structure-of-the-orcid-identifier
+- https://groups.google.com/forum/#!topic/dspace-tech/4nJRVyn8Hk8
 
 
 ## Solution 1 - Use javascript plus DSpace metadata
@@ -62,6 +65,8 @@ The solution:
   * extracts the content of the META-tag (ie. researcher name and ORCID)
   * adds the content to a DIV element
   * adds the DIV element to the page
+- Supports more than one CIA.
+- The displayed ORCID is a hyperlink.
 
 Evaluation of the solution:
 1. Easy to setup.
@@ -81,7 +86,7 @@ Evaluation of the solution:
 
 ## Solution 2 - Use javascript plus a custom database
 
-Not implemented here (yet).
+Not implemented here.
 
 The solution:
 
@@ -114,9 +119,21 @@ Evaluation of the solution:
    and web crawlers.
 
 
-## Solution 3 - Modify the DSpace Java source code & add custom database table
+## Solution 3 - Modify the DSpace XSLT source code
 
-I am not a Java developer, so this is not a likely option for me.
-In fact perhaps a Java developer could contribute code to implement
-the ORCID API v2 instead?
+See folder *xslt_metadata*.
+
+Environment:
+- DSpace 5.6
+- XMLUI Mirage 2
+
+The solution:
+
+Similar to solution 1 above except implemented by changing the
+XSLT in item-view.xsl (without using any javascript). It has the
+advantage that the CIA-Name and CIA-ORCID info (eg.
+"Name:1111-2222-3333-444X") can be extracted directly from
+"dc.contributor.other" (or "dc.contributor.ciaorcid" or other
+field). [Note that XSLT v1 does not support regular expressions,
+so string manipulation is less flexible.]
 
