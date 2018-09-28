@@ -1,6 +1,8 @@
 FlindersDSpace-OrcidCIA  ** SUPERSEDED **
 =======================
 
+This Github repository is **superseded by** [grantj-re3/FlindersDSpace-OrcidDisplay](https://github.com/grantj-re3/FlindersDSpace-OrcidDisplay).
+
 ## Summary
 
 This repo shows a workaround to display the ORCID of the Chief Investigator
